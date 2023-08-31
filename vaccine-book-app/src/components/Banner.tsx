@@ -1,7 +1,7 @@
 import Image from "next/image";
 import styles from "./banner.module.css";
 
-export default function Banner() {
+export default function BannerH() {
   return (
     <div className={styles.banner}>
       <Image
@@ -12,8 +12,8 @@ export default function Banner() {
         objectFit="cover"
       />
       <div className={styles.bannerText}>
-        <h1>Your Vaccine Partner</h1>
-        <h3>Leave it to us</h3>
+        <h1 className="text-4xl font-medium">Your Vaccine Boi</h1>
+        <h3 className="text-xl font-serif">Trust me bro</h3>
       </div>
     </div>
   );
