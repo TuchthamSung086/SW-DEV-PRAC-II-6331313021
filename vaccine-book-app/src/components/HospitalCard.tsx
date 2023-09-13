@@ -1,5 +1,5 @@
 import Image from "next/image";
-
+import InteractiveCard from "./InteractiveCard";
 export default function HospitalCard({
   imgSrc,
   hospitalName,
@@ -8,7 +8,7 @@ export default function HospitalCard({
   hospitalName: string;
 }) {
   return (
-    <div className="w-1/5 h-[300px] rounded-lg shadow-lg inline-block p-[10px] m-[10px]">
+    <InteractiveCard>
       <div className="w-full h-[70%] relative rounded-t-lg">
         <Image
           src={imgSrc}
@@ -18,6 +18,6 @@ export default function HospitalCard({
         ></Image>
       </div>
       <div className="w-full h-[30%] p-[10px]">{hospitalName}</div>
-    </div>
+    </InteractiveCard>
   );
 }
