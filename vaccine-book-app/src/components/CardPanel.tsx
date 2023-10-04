@@ -1,17 +1,25 @@
 "use client";
 import { useReducer, useState } from "react";
 import HospitalCard from "./HospitalCard";
+import Link from "next/link";
 
 export default function CardPanel() {
-  const hospitals = [
-    ["Chulalongkorn Hospital", "/img/chula.jpg"],
-    ["Rajavithi Hospital", "/img/rajavithi.jpg"],
-    ["Thammasat University Hospital", "/img/thammasat.jpg"],
+  /*
+  Mock Data for Demonstration Only
+  */
+  const mockHospital = [
+    { hid: "001", name: "Chulalongkorn Hospital", image: "/img/chula.jpg" },
+    { hid: "002", name: "Rajavithi Hospital", image: "/img/rajavithi.jpg" },
+    {
+      hid: "003",
+      name: "Thammasat University Hospital",
+      image: "/img/thammasat.jpg",
+    },
   ];
   const initialRating = new Map();
-  for (let index = 0; index < hospitals.length; index++) {
-    initialRating.set(hospitals[index][0], 0);
-  }
+  mockHospital.forEach((hospital) => {
+    initialRating.set(hospital.name, 0);
+  });
 
   function ratingReducer(
     currentRatings: Map<string, number>,
@@ -28,18 +36,20 @@ export default function CardPanel() {
   return (
     <div>
       <div className="flex">
-        {hospitals.map((hospital, index) => {
+        {mockHospital.map((hospital) => {
           return (
-            <HospitalCard
-              hospitalName={hospital[0]}
-              imgSrc={hospital[1]}
-              onRate={(hospitalName: string, rating: number) =>
-                dispatchRating({
-                  hospitalName: hospitalName,
-                  newRating: rating,
-                })
-              }
-            />
+            <Link href={`hospital/${hospital.hid}`} className="w-1/5">
+              <HospitalCard
+                hospitalName={hospital.name}
+                imgSrc={hospital.image}
+                onRate={(hospitalName: string, rating: number) =>
+                  dispatchRating({
+                    hospitalName: hospitalName,
+                    newRating: rating,
+                  })
+                }
+              />
+            </Link>
           );
         })}
       </div>
