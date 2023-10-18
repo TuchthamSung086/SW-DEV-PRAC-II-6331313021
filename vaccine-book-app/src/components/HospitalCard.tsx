@@ -14,7 +14,7 @@ export default function HospitalCard({
 }: {
   imgSrc: string;
   hospitalName: string;
-  onRate: Function;
+  onRate?: Function;
 }) {
   const [value, setValue] = useState<number | null>(0);
   return (
@@ -28,20 +28,25 @@ export default function HospitalCard({
         ></Image>
       </div>
       <div className="w-full h-20 p-[10px]">{hospitalName}</div>
-      <Box
-        sx={{
-          "& > legend": { mt: 2 },
-        }}
-      >
-        <Rating
-          name="simple-controlled"
-          value={value}
-          onChange={(event, newValue) => {
-            setValue(newValue);
-            onRate(hospitalName, newValue);
+
+      {onRate ? (
+        <Box
+          sx={{
+            "& > legend": { mt: 2 },
           }}
-        />
-      </Box>
+        >
+          <Rating
+            name="simple-controlled"
+            value={value}
+            onChange={(event, newValue) => {
+              setValue(newValue);
+              onRate(hospitalName, newValue);
+            }}
+          />
+        </Box>
+      ) : (
+        ""
+      )}
     </InteractiveCard>
   );
 }
