@@ -3,6 +3,13 @@
 import { DatePicker } from "@mui/x-date-pickers";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/redux/store";
+import { BookingItem } from "../../interfaces";
+import { addBooking } from "@/redux/features/bookSlice";
+import React, { ChangeEvent, FormEvent, useState } from "react";
+import dayjs, { Dayjs } from "dayjs";
+import { json } from "stream/consumers";
 
 function BookingFormText({
   title,
@@ -78,7 +85,13 @@ function BookingFormSelect({
   );
 }
 
-function BookingFormDate() {
+function BookingFormDate({
+  dateValue,
+  setDateValue,
+}: {
+  dateValue: dayjs.Dayjs | null;
+  setDateValue: React.Dispatch<React.SetStateAction<dayjs.Dayjs | null>>;
+}) {
   return (
     <div className="sm:col-span-3 block">
       <label
@@ -88,15 +101,62 @@ function BookingFormDate() {
         Choose date
       </label>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <DatePicker />
+        <DatePicker
+          label="Controlled picker"
+          value={dateValue}
+          onChange={(newValue) => setDateValue(newValue)}
+        />
       </LocalizationProvider>
     </div>
   );
 }
 
 export default function BookingForm() {
+  const dispatch = useDispatch<AppDispatch>();
+  const [dateValue, setDateValue] = React.useState<Dayjs | null>(
+    dayjs("2022-04-17")
+  );
+
+  const bookVaccine = (
+    firstName: string,
+    lastName: string,
+    ID: string,
+    hospital: string,
+    date: string
+  ) => {
+    const item: BookingItem = {
+      firstName: firstName,
+      lastName: lastName,
+      hospital: hospital,
+      date: date,
+      SSN: ID,
+    };
+    dispatch(addBooking(item));
+  };
+
+  const getFieldById = (id: string) => {
+    return (document.getElementById(id) as HTMLInputElement)?.value;
+  };
+
+  const handleSubmit = (event: FormEvent) => {
+    event.preventDefault();
+    let date = "";
+    if (dateValue) {
+      date = dateValue.toString();
+    }
+    const item: BookingItem = {
+      firstName: getFieldById("firstName"),
+      lastName: getFieldById("lastName"),
+      SSN: getFieldById("id"),
+      hospital: getFieldById("hospital"),
+      date: date,
+    };
+    dispatch(addBooking(item));
+    alert("Form submitted with details: " + JSON.stringify(item));
+  };
+
   return (
-    <form>
+    <form onSubmit={handleSubmit}>
       <div className="space-y-12">
         <div className="border-b border-gray-900/10 pb-12">
           <h2 className="text-base font-semibold leading-7 text-gray-900 content-center text-center">
@@ -127,12 +187,15 @@ export default function BookingForm() {
               id="hospital"
               placeholder="Hospital"
               choices={[
-                "Chulalongkorn Hospital",
+                "Chulalongkorn Hospital", // TODO: change this to connect to backend some day
                 "Rajavithi Hospital",
                 "Thammasat University Hospital",
               ]}
             ></BookingFormSelect>
-            <BookingFormDate />
+            <BookingFormDate
+              dateValue={dateValue}
+              setDateValue={setDateValue}
+            />
           </div>
         </div>
       </div>
