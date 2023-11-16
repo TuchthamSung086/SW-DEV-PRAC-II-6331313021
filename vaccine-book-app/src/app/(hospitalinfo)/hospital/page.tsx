@@ -8,6 +8,10 @@ import AddHospitalForm from "@/components/AddHospitalForm";
 export default async function Hospital() {
 
   const hospitals = await getHospitals();
+  // TODO: remove this
+  console.log("HOSPITALS BELOW");
+  console.log(hospitals);
+  console.log("HOSPITALS ABOVE");
   const session = await getServerSession(authOptions);
   if (!session || !session.user.token) return null;
 
